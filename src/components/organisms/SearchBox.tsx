@@ -1,62 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { StopLocation } from '../../types';
 
 interface SearchBoxProps {
   onSelect: (stop: StopLocation) => void;
+  endpoint: string;
+  placeholder?: string;
 }
 
-export const SearchBox = ({ onSelect }: SearchBoxProps) => {
+export const SearchBox = ({ onSelect, endpoint, placeholder = 'Search for a station...' }: SearchBoxProps) => {
+  const [input, setInput] = useState('');
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<StopLocation[]>([]);
-  const [loading, setLoading] = useState(false);
 
-  const search = async () => {
-    if (!query) return;
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/sl/search?q=${encodeURIComponent(query)}`);
-      const data = await response.json();
-      setResults(data.StopLocation || []);
-    } catch (e) {
-      console.error('Search failed', e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => setQuery(input.trim()), 350);
+    return () => clearTimeout(timer);
+  }, [input]);
+
+  const { data, isFetching } = useQuery<{ StopLocation: StopLocation[] }>({
+    queryKey: ['search', endpoint, query],
+    queryFn: () => fetch(`${endpoint}?q=${encodeURIComponent(query)}`).then((r) => r.json()),
+    enabled: query.length > 0,
+    staleTime: 60_000,
+  });
+
+  const results = data?.StopLocation ?? [];
 
   return (
-    <div className="w-full max-w-2xl mx-auto mt-8 px-4">
-      <div className="flex gap-4">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && search()}
-          placeholder="Search for a station..."
-          className="flex-grow bg-surface text-white px-6 py-4 rounded-xl border-none outline-none focus:ring-2 focus:ring-sl-blue transition-all text-xl"
-        />
-        <button
-          onClick={search}
-          className="bg-sl-blue px-8 py-4 rounded-xl font-bold text-xl hover:brightness-110 active:scale-95 transition-all"
-        >
-          Search
-        </button>
-      </div>
+    <div className="w-full">
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={placeholder}
+        className="w-full bg-black text-white px-4 py-2 border border-white outline-none text-lg"
+      />
 
-      <div className="mt-8 flex flex-col gap-3">
-        {loading && <div className="p-6 bg-surface rounded-xl animate-pulse text-xl">Searching...</div>}
-        {!loading && results.map((stop) => (
+      <div className="mt-2 flex flex-col">
+        {isFetching && <p className="text-gray-500 py-2">Searching...</p>}
+        {!isFetching && results.map((stop) => (
           <div
             key={stop.id}
             onClick={() => onSelect(stop)}
-            className="flex justify-between items-center p-6 bg-surface rounded-xl cursor-pointer hover:bg-zinc-800 transition-colors text-xl"
+            className="flex justify-between items-center py-3 border-b border-zinc-700 cursor-pointer text-lg"
           >
-            <span className="font-medium">{stop.name}</span>
-            <span className="text-gray-500 text-sm">ID: {stop.id}</span>
+            <span>{stop.name}</span>
+            <span className="text-gray-500 text-sm">{stop.id}</span>
           </div>
         ))}
-        {!loading && query && results.length === 0 && (
-          <div className="p-6 bg-surface rounded-xl text-gray-500 text-xl">No stations found.</div>
+        {!isFetching && query && results.length === 0 && (
+          <p className="text-gray-500 py-2">No stations found.</p>
         )}
       </div>
     </div>
