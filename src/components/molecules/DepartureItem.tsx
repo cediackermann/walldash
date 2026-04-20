@@ -4,7 +4,7 @@ import { Departure } from '../../types';
 export const DepartureItem = ({ departure }: { departure: Departure }) => {
   const depTime = new Date(departure.scheduled);
   const diffMin = Math.round((depTime.getTime() - Date.now()) / 60000);
-  const timeText = diffMin <= 0 ? 'Nu' : `${diffMin} min`;
+  const timeText = diffMin <= 0 ? 'Now' : `${diffMin} min`;
 
   return (
     <div className="flex justify-between items-center px-5 py-4 bg-surface rounded-xl text-3xl font-medium transition hover:bg-zinc-800">

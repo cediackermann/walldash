@@ -39,12 +39,12 @@ export const SearchBox = ({ onSelect }: SearchBoxProps) => {
           onClick={search}
           className="bg-sl-blue px-8 py-4 rounded-xl font-bold text-xl hover:brightness-110 active:scale-95 transition-all"
         >
-          Sök
+          Search
         </button>
       </div>
 
       <div className="mt-8 flex flex-col gap-3">
-        {loading && <div className="p-6 bg-surface rounded-xl animate-pulse text-xl">Söker...</div>}
+        {loading && <div className="p-6 bg-surface rounded-xl animate-pulse text-xl">Searching...</div>}
         {!loading && results.map((stop) => (
           <div
             key={stop.id}
@@ -56,7 +56,7 @@ export const SearchBox = ({ onSelect }: SearchBoxProps) => {
           </div>
         ))}
         {!loading && query && results.length === 0 && (
-          <div className="p-6 bg-surface rounded-xl text-gray-500 text-xl">Inga stationer hittades.</div>
+          <div className="p-6 bg-surface rounded-xl text-gray-500 text-xl">No stations found.</div>
         )}
       </div>
     </div>

@@ -6,7 +6,7 @@ export const Settings = () => {
   const navigate = useNavigate();
 
   const handleSelect = async (stop: StopLocation) => {
-    if (!confirm(`Vill du byta station till "${stop.name}"?`)) return;
+    if (!confirm(`Do you want to change the station to "${stop.name}"?`)) return;
 
     try {
       const response = await fetch('/api/config', {
@@ -19,7 +19,7 @@ export const Settings = () => {
         navigate('/');
       }
     } catch (e) {
-      alert('Kunde inte spara inställningarna.');
+      alert('Could not save settings.');
     }
   };
 
@@ -29,12 +29,12 @@ export const Settings = () => {
         <Link to="/" className="text-4xl text-gray-500 hover:text-white transition-colors">
           ←
         </Link>
-        <h1 className="text-5xl font-bold">Inställningar</h1>
+        <h1 className="text-5xl font-bold">Settings</h1>
       </div>
 
       <div className="max-w-4xl w-full mx-auto">
         <h2 className="text-2xl text-gray-400 mb-8 px-4 font-medium uppercase tracking-widest">
-          Sök efter din station
+          Search for your station
         </h2>
         <SearchBox onSelect={handleSelect} />
       </div>

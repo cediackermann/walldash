@@ -8,14 +8,14 @@ export const Clock = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const timeStr = time.toLocaleTimeString('sv-SE', {
+  const timeStr = time.toLocaleTimeString('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
     hour12: false
   });
 
-  const dateStr = time.toLocaleDateString('sv-SE', {
+  const dateStr = time.toLocaleDateString('en-GB', {
     weekday: 'long',
     day: 'numeric',
     month: 'long'
