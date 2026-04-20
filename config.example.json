@@ -1,0 +1,28 @@
+{
+  "alwaysOn": false,
+  "refreshRate": 10000,
+  "layout": {
+    "header-left": "clock",
+    "header-right": "weather",
+    "main-1": "sl",
+    "main-2": "sbb",
+    "footer-1": "spotify",
+    "footer-2": "spacer",
+    "footer-3": "system"
+  },
+  "spotify": {
+    "clientId": "",
+    "clientSecret": ""
+  },
+  "weather": {
+    "plz": ""
+  },
+  "sl": {
+    "stationId": "",
+    "stationName": ""
+  },
+  "sbb": {
+    "stationId": "",
+    "stationName": ""
+  }
+}

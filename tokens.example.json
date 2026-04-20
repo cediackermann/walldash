@@ -1,0 +1,7 @@
+{
+  "spotify": {
+    "accessToken": "",
+    "refreshToken": "",
+    "expiresAt": 0
+  }
+}
