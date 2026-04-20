@@ -51,11 +51,18 @@ app.get('/api/sl/departures/:siteId', async (req, res) => {
 app.get('/api/sl/search', async (req, res) => {
   const query = req.query.q as string;
   if (!query) return res.status(400).json({ error: 'Query required' });
-  
+
   try {
-    const response = await fetch(`https://journeyplanner.integration.sl.se/v2/stop-finder?name_sf=${encodeURIComponent(query)}&format=json`);
+    const response = await fetch(`https://journeyplanner.integration.sl.se/v2/stop-finder?name_sf=${encodeURIComponent(query)}&format=json&type_sf=any&any_obj_filter_sf=2`);
     const data = await response.json();
-    res.json(data);
+    const locations: any[] = data.locations || [];
+    const StopLocation = locations
+      .filter((loc) => loc.type === 'stop' && loc.properties?.stopId)
+      .map((loc) => ({
+        id: loc.properties.stopId.replace(/^1800/, ''),
+        name: loc.disassembledName || loc.name,
+      }));
+    res.json({ StopLocation });
   } catch (error) {
     res.status(500).json({ error: 'Failed to search for station' });
   }
