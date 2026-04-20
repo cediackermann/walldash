@@ -5,6 +5,7 @@
     "": {
       "name": "walldash",
       "dependencies": {
+        "@tanstack/react-query": "^5.99.2",
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "@types/react-router-dom": "^5.3.3",
@@ -35,6 +36,10 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.9", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.0.3", "@jridgewell/sourcemap-codec": "^1.4.10" } }, "sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ=="],
+
+    "@tanstack/query-core": ["@tanstack/query-core@5.99.2", "", {}, "sha512-1HunU0bXVsR1ZJMZbcOPE6VtaBJxsW809RE9xPe4Gz7MlB0GWwQvuTPhMoEmQ/hIzFKJ/DWAuttIe7BOaWx0tA=="],
+
+    "@tanstack/react-query": ["@tanstack/react-query@5.99.2", "", { "dependencies": { "@tanstack/query-core": "5.99.2" }, "peerDependencies": { "react": "^18 || ^19" } }, "sha512-vM91UEe45QUS9ED6OklsVL15i8qKcRqNwpWzPTVWvRPRSEgDudDgHpvyTjcdlwHcrKNa80T+xXYcchT2noPnZA=="],
 
     "@tsconfig/node10": ["@tsconfig/node10@1.0.12", "", {}, "sha512-UCYBaeFvM11aU2y3YPZ//O5Rhj+xKyzy7mvcIoAjASbigy8mHMryP5cK7dgjlz2hWxh1g5pLw084E0a/wlUSFQ=="],
 
