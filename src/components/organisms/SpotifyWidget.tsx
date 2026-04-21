@@ -20,60 +20,38 @@ export const SpotifyWidget = () => {
   const effectiveH = h || 100;
   const effectiveW = w || 300;
 
-  // Progressive disclosure
-  const showLabel        = effectiveH > 80;
-  const showArtist       = effectiveH > 65  || effectiveW > 240;
-  const showAlbum        = effectiveH > 120 && effectiveW > 260;
-  const showProgress     = !alwaysOn && effectiveH > 95 && effectiveW > 200;
-  const showProgressTime = showProgress && effectiveW > 280;
-
-  // Font sizes derived from container
-  const trackFS  = Math.min(effectiveH * 0.28, effectiveW * 0.10, 40);
-  const artistFS = Math.max(11, trackFS * 0.70);
-  const albumFS  = Math.max(10, trackFS * 0.55);
-  const labelFS  = Math.max(9,  trackFS * 0.45);
-  const barH     = Math.max(2, effectiveH * 0.018);
+  // Progressive disclosure — text sizes are fixed, only visibility changes
+  const showAlbum    = effectiveH > 110 && effectiveW > 260;
+  const showProgress = !alwaysOn && effectiveH > 90 && effectiveW > 200;
+  const showTimes    = showProgress && effectiveW > 280;
 
   return (
     <div ref={ref} className="w-full h-full flex flex-col justify-center overflow-hidden">
-      {showLabel && (
-        <div className="text-gray-400 uppercase tracking-wider" style={{ fontSize: labelFS, marginBottom: '0.3em' }}>
-          Now Playing
-        </div>
-      )}
+      <h2 className="text-sm uppercase tracking-wider text-gray-400 mb-1 font-normal">Now Playing</h2>
       {data?.playing && data.track ? (
         <>
-          <div
-            className="leading-tight truncate"
-            style={{ fontSize: trackFS, fontWeight: alwaysOn ? 400 : 700 }}
-          >
+          <p className={`text-2xl leading-tight truncate ${alwaysOn ? 'font-normal' : 'font-bold'}`}>
             {data.track.name}
-          </div>
-          {showArtist && (
-            <div className="text-gray-300 truncate" style={{ fontSize: artistFS, marginTop: '0.15em' }}>
-              {data.track.artist}
-            </div>
-          )}
+          </p>
+          <p className="text-lg text-gray-300 mt-0.5 truncate">{data.track.artist}</p>
           {showAlbum && (
-            <div className="text-gray-500 truncate" style={{ fontSize: albumFS, marginTop: '0.1em' }}>
-              {data.track.album}
-            </div>
+            <p className="text-sm text-gray-500 truncate">{data.track.album}</p>
           )}
           {showProgress && (
-            <div className="flex items-center gap-2" style={{ marginTop: '0.4em' }}>
-              {showProgressTime && (
-                <span className="text-gray-500 font-mono shrink-0" style={{ fontSize: albumFS }}>
+            <div className="mt-1.5 flex items-center gap-2">
+              {showTimes && (
+                <span className="text-xs text-gray-500 font-mono w-10 shrink-0">
                   {fmtMs(data.track.progressMs)}
                 </span>
               )}
-              <div className="flex-1 bg-zinc-800 relative" style={{ height: barH }}>
+              <div className="flex-1 h-1.5 bg-zinc-800 relative">
                 <div
                   className="absolute inset-y-0 left-0 bg-white"
                   style={{ width: `${(data.track.progressMs / data.track.durationMs) * 100}%` }}
                 />
               </div>
-              {showProgressTime && (
-                <span className="text-gray-500 font-mono shrink-0 text-right" style={{ fontSize: albumFS }}>
+              {showTimes && (
+                <span className="text-xs text-gray-500 font-mono w-10 shrink-0 text-right">
                   {fmtMs(data.track.durationMs)}
                 </span>
               )}
@@ -81,7 +59,7 @@ export const SpotifyWidget = () => {
           )}
         </>
       ) : (
-        <div className="text-gray-500" style={{ fontSize: artistFS }}>Nothing playing</div>
+        <p className="text-gray-500 text-lg">Nothing playing</p>
       )}
     </div>
   );

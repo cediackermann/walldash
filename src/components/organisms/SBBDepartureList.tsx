@@ -1,6 +1,10 @@
 import { useSize } from '../../hooks/useSize';
 import { SBBDepartureItem } from '../molecules/SBBDepartureItem';
 import { SBBDeparture } from '../../types';
+import { useAlwaysOn } from '../../contexts/AlwaysOnContext';
+
+const ROW_H    = 56;
+const HEADER_H = 38;
 
 export const SBBDepartureList = ({
   departures,
@@ -11,46 +15,32 @@ export const SBBDepartureList = ({
   loading: boolean;
   stationName?: string;
 }) => {
+  const alwaysOn = useAlwaysOn();
   const { h, w, ref } = useSize();
-  const effectiveH = h || 200;
+  const effectiveH = h || 300;
 
-  // Header sizing
-  const headerH      = stationName ? Math.max(24, Math.min(effectiveH * 0.17, 44)) : 0;
-  const headerFontSz = Math.max(11, headerH * 0.55);
-
-  // Row sizing: taller containers get bigger rows and platform info
-  const listH      = effectiveH - headerH - (headerH ? 6 : 0);
-  const rowH       = listH > 500 ? 68 : listH > 360 ? 54 : listH > 240 ? 42 : listH > 150 ? 34 : 27;
-  const maxRows    = Math.max(1, Math.floor(listH / rowH));
-  const showPlatform = rowH >= 54 && (w || 0) > 300;
+  const listH      = effectiveH - (stationName ? HEADER_H : 0);
+  const maxRows    = Math.max(1, Math.floor(listH / ROW_H));
+  // Platform column only when the slot is wide enough to show it comfortably
+  const showPlatform = (w || 0) > 320;
   const visible    = departures.slice(0, maxRows);
-
-  if (loading && departures.length === 0) {
-    return (
-      <div ref={ref} className="w-full h-full flex items-center">
-        <span className="text-gray-500 text-sm">Loading…</span>
-      </div>
-    );
-  }
 
   return (
     <div ref={ref} className="w-full h-full flex flex-col overflow-hidden">
       {stationName && (
-        <div
-          className="text-gray-200 uppercase tracking-wider font-bold shrink-0 flex items-center border-b border-zinc-600"
-          style={{ height: headerH, fontSize: headerFontSz }}
-        >
+        <h2 className={`text-xl uppercase tracking-wider shrink-0 pb-1 ${alwaysOn ? 'font-normal' : 'font-bold'}`}>
           {stationName}
-        </div>
+        </h2>
       )}
-      {visible.length === 0 ? (
-        <span className="text-gray-500 mt-2 text-sm">No departures</span>
+      {loading && departures.length === 0 ? (
+        <p className="text-gray-500 text-xl mt-4">Loading…</p>
+      ) : visible.length === 0 ? (
+        <p className="text-gray-500 text-xl mt-4">No departures</p>
       ) : (
         visible.map((dep, i) => (
           <SBBDepartureItem
             key={`${dep.name}-${dep.stop.departure}-${i}`}
             departure={dep}
-            rowHeight={rowH}
             showPlatform={showPlatform}
           />
         ))
