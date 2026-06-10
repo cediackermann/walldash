@@ -1,0 +1,19 @@
+# Next.js app built with bun, which rules_js cannot consume. This app keeps its
+# native `bun`/Next.js build. The filegroup just makes the directory a valid
+# Bazel package and exposes sources.
+# TODO: for real Bazel builds, generate a package-lock.json and adopt
+# aspect_rules_js (https://github.com/aspect-build/rules_js).
+filegroup(
+    name = "srcs",
+    srcs = glob(["src/**"], allow_empty = True) + glob(
+        [
+            "*.ts",
+            "*.tsx",
+            "*.mjs",
+            "*.js",
+            "*.json",
+        ],
+        allow_empty = True,
+    ),
+    visibility = ["//visibility:public"],
+)
